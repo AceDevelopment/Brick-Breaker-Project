@@ -1,0 +1,27 @@
+
+import java.awt.*;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Aman
+ */
+public class GameOverMenu {
+    public Rectangle menuButton = new Rectangle(500, 500, 330, 50);
+    
+    public void menuButtons (Graphics g){
+           Graphics2D wrx = (Graphics2D)g;
+           Font buttonFont = new Font("old english text", Font.BOLD, 30);
+           g.setColor(Color.black);
+           g.fillRect(500, 500, 330, 50);
+           g.setFont(buttonFont);
+           g.setColor(Color.white);
+           g.drawString("BACK TO MAIN MENU", menuButton.x + 10, menuButton.y + 35);
+           wrx.draw(menuButton);
+    }
+}
