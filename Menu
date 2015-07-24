@@ -1,0 +1,41 @@
+
+
+import java.awt.*;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Aman
+ */
+public class Menu {
+    
+    public Rectangle playButton = new Rectangle(650, 300, 100, 50);
+    public Rectangle helpButton = new Rectangle(650, 400, 100, 50);
+    public Rectangle quitButton = new Rectangle(650, 500, 100, 50);
+    
+    
+    public void render(Graphics g){
+        Graphics2D gtr = (Graphics2D) g;
+           Font title = new Font("old english text", Font.BOLD, 50);
+           g.setColor(Color.black);
+           g.fillRect(520, 140, 350, 100);
+           g.setFont(title);
+           g.drawRect(520, 140, 350, 100);
+           g.setColor(Color.white);
+           g.drawString("START GAME", 530, 200);
+           Font buttonFont = new Font("old english text", Font.BOLD, 30);
+           g.setFont(buttonFont);
+           g.drawString("PLAY", playButton.x + 15, playButton.y + 35);
+           g.drawString("HELP", helpButton.x + 15, helpButton.y + 35);
+           g.drawString("QUIT", quitButton.x + 15, quitButton.y + 35);
+           g.setColor(Color.black);
+           gtr.draw(playButton);
+           gtr.draw(helpButton);
+           gtr.draw(quitButton);
+    }
+}
