@@ -1,0 +1,79 @@
+
+import java.awt.*;
+import java.awt.event.*;
+
+
+
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Aman
+ */
+public class MouseInput extends Game implements MouseListener{
+    public Rectangle playButton = new Rectangle(650, 300, 100, 50);
+    public Rectangle helpButton = new Rectangle(650, 400, 100, 50);
+    public Rectangle quitButton = new Rectangle(650, 500, 100, 50);
+
+  
+    @Override
+    public void mousePressed(MouseEvent e) {
+        int mx = e.getX();
+        int my = e.getY();
+
+        if(MyPanel.State == MyPanel.STATE.MENU){
+        if((mx >= 650 && mx <= 650 + 100) && (my >= 300 && my <= 350)){
+            MyPanel.State = MyPanel.STATE.START;
+        }
+        if((mx >= 650 && mx <= 650 + 100) && (my >= 500 && my <= 550)){
+            System.exit(1);
+        }}
+        if(MyPanel.State == MyPanel.STATE.START){
+        if((mx >=1250 && mx <= 1250 + 105) && (my >= 5 && my <= 55)){
+            MyPanel.State = MyPanel.STATE.MENU;
+        }}
+        if(MyPanel.State == MyPanel.STATE.GAME){
+        if((mx >=1250 && mx <= 1250 + 105) && (my >= 5 && my <= 55)){
+            MyPanel.State = MyPanel.STATE.MENU;
+        }}
+        if(MyPanel.State == MyPanel.STATE.GAMEOVER){
+        if((mx >=500 && mx <= 500 + 330) && (my >= 500 && my <= 555)){
+            MyPanel.State = MyPanel.STATE.MENU;
+        }
+        }
+        if(MyPanel.State == MyPanel.STATE.START){
+        if((mx >= 0 && mx <= 1400) && (my >= 0 && my <= 780)){
+            MyPanel.State = MyPanel.STATE.GAME;
+        }
+        }
+        
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
+    
+}
