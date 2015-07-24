@@ -1,0 +1,36 @@
+
+import java.awt.*;
+
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Aman
+ */
+public class brick {
+    int x,y, width = 60, height = 20;
+    int id; 
+    boolean visible = true;
+    
+    public brick(int x, int y,int width, int height, int id, boolean visible){
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.id = id;
+        this.visible = visible;
+    }
+    
+    public void draw(Graphics g){
+        g.fillRect(x,y,width,height);
+    }
+  
+    public int getId(){
+        return id; 
+    }
+}
