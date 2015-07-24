@@ -1,0 +1,365 @@
+/*
+    Breaking Brick
+    Coded by Aman Sidhu
+    Ace Gameing.
+ */
+
+
+
+
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.*;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+
+
+
+ 
+public class Game{
+   
+   public static void main (String[] args){
+       
+       SwingUtilities.invokeLater(new Runnable(){
+           @Override
+           public void run(){
+               Gui();
+               try {
+                   playSound();
+               } catch (IOException ex) {
+                   Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+               }
+               
+           }
+       });
+   }
+   
+   //Create GUI 
+   private static void Gui(){
+       System.out.println("Created GUI on EDT?" + SwingUtilities.isEventDispatchThread());
+       JFrame f = new JFrame("Aman's Game");
+       f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       f.setSize(500, 1000);
+       f.add(new MyPanel());
+       f.pack();
+       f.setResizable(false);
+       f.setVisible(true);
+    
+   }
+   //Background Music
+  public static void playSound() throws IOException{
+      String music = "C:/Users/Aman Sidhu/Desktop/java/mp.wav";
+      String music2 = "C:/Users/Aman Sidhu/Desktop/java/mb.wav";
+        try
+        {
+           InputStream in;
+           in = new FileInputStream(music);
+           AudioStream as;
+           as = new AudioStream(in);
+           AudioPlayer.player.start(as);
+        } 
+        catch(IOException e){
+            e.printStackTrace(System.out);
+        }
+        
+        
+    }
+
+}
+class MyPanel extends JPanel{
+    int x = 10, y = 50, r = 20;
+    ImageIcon bg;
+    double dx = 3, dy = 3;
+    int counter = 0, bricks = 0;
+    int record;
+    int height;
+    int w = 60;
+    int h = 20;
+    ArrayList<brick> bricker = new ArrayList<>();
+    int brick_x = 52; 
+    int brick_y = 150; 
+    int brick_y2 = 200;  
+    int brick_x2 = 2;
+    int brick_x3 = 2;
+    int brick_y3 = 100;
+    boolean visible = true;
+    int bricksDestroyed = 0;
+    
+    int lives = 3;
+    
+
+    public static enum STATE {
+        MENU,
+        GAME,
+        GAMEOVER,
+        START
+    };
+    public static STATE State = STATE.MENU;
+    private final Menu menu;
+    private final MenuButton menuButton;
+    private final GameOverMenu GameOverMenu;
+    private int rectangleX = 210, rectangleY = 600, rectangleW = 100, rectangleH = 10;
+    
+    //Mouse Listener
+    public MyPanel(){
+ 
+        for(int i = 0; i < 13; i++){
+            bricker.add(new brick(brick_x, brick_y, w, h, i, visible));
+            brick_x += 100; 
+        }
+        
+        for(int i = 13; i < 27; i++){
+            bricker.add(new brick(brick_x2, brick_y2, w, h, i, visible));
+            brick_x2 += 100; 
+        }
+        
+        for(int i = 27; i < 41; i++){
+            bricker.add(new brick(brick_x3, brick_y3, w, h, i, visible));
+            brick_x3 += 100;
+        }
+        
+        
+        JFrame f = new JFrame();
+        f.setLayout(null);
+        menu = new Menu();
+        height = getSize().height;
+        menuButton = new MenuButton();
+        GameOverMenu = new GameOverMenu();
+        //timer();
+        
+        addMouseListener(new MouseInput());
+        addMouseListener(new MouseAdapter(){
+        @Override
+        public void mouseMoved(MouseEvent e){
+            moveSquare(e.getX());
+            
+        }
+    });
+        addMouseMotionListener(new MouseAdapter(){
+        @Override
+        public void mouseMoved(MouseEvent e){
+            moveSquare(e.getX());
+            
+        }
+    });
+        
+    }
+   
+    
+    //Sound Effect
+     public static void Sound(){
+       if(State == STATE.START){
+       String backgroundMusic = "C:/Users/Aman Sidhu/Desktop/java/Coin.wav";
+          try
+        {
+           InputStream bin;
+           bin = new FileInputStream(backgroundMusic);
+           AudioStream sas;
+           sas = new AudioStream(bin);
+           AudioPlayer.player.start(sas);
+        } 
+        catch(IOException e){
+            e.printStackTrace(System.out);
+        }
+       }
+   }
+     public void highScore(){
+         if(counter > record){
+             record = counter;
+         }
+     }
+     public void resetBall() {
+		x = rectangleX + rectangleW / 2 - r / 2;
+		y = rectangleY - r;
+		
+	}
+     
+     //Player Box
+    public void moveSquare(int x){
+        int OFFSET = 1;
+        if((rectangleX!=x)){
+            repaint(rectangleX,rectangleY,rectangleW+OFFSET, rectangleH+OFFSET);
+            rectangleX = x - 45;
+            
+            repaint(rectangleX,rectangleY,rectangleW+OFFSET, rectangleH+OFFSET);
+        }
+    }
+    
+    @Override
+    public Dimension getPreferredSize(){
+        return new Dimension(1360,700);
+    }
+  
+   
+    //Objects
+    @Override
+    public void paint(Graphics g){
+        super.paintComponent(g);
+        Rectangle bounds = getBounds();
+         
+        
+        {
+            bg = new ImageIcon("C:/Users/Aman Sidhu/Desktop/java/backpic.gif");
+            bg.paintIcon(this, g, -300,-300);
+        }
+      
+        
+        if(State == STATE.MENU)
+        {
+           menu.render(g);  
+           counter = 0;
+           resetBall();
+        } 
+        if(State == STATE.START){
+            resetBall();
+            g.setColor(Color.RED);
+            for (brick b : bricker) {
+                b.draw(g);
+                System.out.println("brick " + b.id);
+            }
+        menuButton.menuButton(g);
+        Font fr = new Font("old english text", Font.BOLD, 18);
+        g.setColor(Color.red);
+        g.setFont(fr);
+
+            g.drawString("SCORE = " + counter, 15, 15);
+        
+        
+           
+        Graphics2D g2 = (Graphics2D)g;
+        g2.setColor(Color.red);
+        g2.fillRect(rectangleX,rectangleY, rectangleW, rectangleH);
+        g2.setColor(Color.black);
+        g2.drawRect(rectangleX,rectangleY,rectangleW,rectangleH);
+        Graphics2D ball = (Graphics2D)g;
+        ball.setColor(Color.BLACK);
+        ball.fillOval( x, y, r, r);
+        if(lives == 3){
+            g.setColor(Color.red);
+            g.fillOval(660,20,15,15);
+            g.fillOval(680,20,15,15);
+            g.fillOval(700,20,15,15);
+                
+        }
+        
+        if(lives == 2){
+            g.setColor(Color.red);
+            g.fillOval(660,20,15,15);
+            g.fillOval(680,20,15,15);
+        }
+         if(lives == 1){
+            g.setColor(Color.red);
+            g.fillOval(660,20,15,15);
+        }
+        }
+        if(State == STATE.GAME)
+        {
+      
+        g.setColor(Color.RED);
+            for (brick b : bricker) {
+                b.draw(g);
+                System.out.println("brick " + b.id);
+            }
+        menuButton.menuButton(g);
+        Font fr = new Font("old english text", Font.BOLD, 18);
+        g.setColor(Color.red);
+        g.setFont(fr);
+            g.drawString("SCORE = " + counter, 15, 15);
+        
+           
+        Graphics2D g2 = (Graphics2D)g;
+        g2.setColor(Color.red);
+        g2.fillRect(rectangleX,rectangleY, rectangleW, rectangleH);
+        g2.setColor(Color.black);
+        g2.drawRect(rectangleX,rectangleY,rectangleW,rectangleH);
+        Graphics2D ball = (Graphics2D)g;
+        ball.setColor(Color.BLACK);
+        ball.fillOval( x, y, r, r);{
+        if((x + dx < 0) || (x + dx > bounds.width))
+                dx = -dx;
+            if ((y + dy < 0) || (y + dy > bounds.height))
+                dy = -dy;
+            
+            x += dx;
+            y += dy;
+            
+        repaint(); 
+        
+    }
+        
+        if(((x - rectangleX < 110) && (x - rectangleX > 0)) && ((y - rectangleY < 10) && (y - rectangleY > -10))){
+            x--;
+            dy = -dy;
+            
+            y += dy;
+            y--;
+            
+            Sound();
+        } 
+        
+        for(int i = 0; i < bricker.size(); i++){
+            if(bricker.get(i).visible && (x - bricker.get(i).x < 60 && x - bricker.get(i).x > 0) && (y - bricker.get(i).y < 20) && (y - bricker.get(i).y > 0)){
+                bricker.get(i).visible = false;
+                counter++;
+                dy = -dy;
+                repaint();
+                bricksDestroyed++;
+            }
+        }
+        if(bricksDestroyed==40){
+            for(int i = 0; i < bricker.size(); i++){
+                bricker.get(i).width = 60;
+                bricker.get(i).height = 20;
+                repaint();
+            }
+        }
+        for(int i = 0; i < bricker.size(); i++){
+            if(bricker.get(i).visible == false){
+                bricker.get(i).width = 0;
+                bricker.get(i).height = 0;
+            }
+        }
+        
+        if(y > 700){
+            --lives;
+            MyPanel.State = MyPanel.STATE.START;
+        } 
+        if(lives == 3){
+            g.setColor(Color.red);
+            g.fillOval(660,20,15,15);
+            g.fillOval(680,20,15,15);
+            g.fillOval(700,20,15,15);
+                
+        }
+        
+        if(lives == 2){
+            g.setColor(Color.red);
+            g.fillOval(660,20,15,15);
+            g.fillOval(680,20,15,15);
+        }
+         if(lives == 1){
+            g.setColor(Color.red);
+            g.fillOval(660,20,15,15);
+        }
+         if(lives < 1){
+             MyPanel.State = MyPanel.STATE.GAMEOVER;
+         }
+        }
+        if(State == STATE.GAMEOVER){
+            g.setColor(Color.red);
+            highScore();
+            Font gameOver = new Font("old english text", Font.BOLD, 78);
+            g.setFont(gameOver);
+            g.drawString("GAMEOVER", 450, 250);
+            GameOverMenu.menuButtons(g);
+            g.drawString("High Score " + record, 30, 115);
+            lives = 4;
+        }
+        
+    }
+ 
+}
